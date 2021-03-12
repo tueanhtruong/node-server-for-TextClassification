@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from 'express';
+var cmd = require('node-cmd');
 
 const router = Router();
 
@@ -12,16 +13,15 @@ router.get('/:messageId', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const id = uuidv4();
-  const message = {
-    id,
-    text: req.body.text,
-    userId: req.context.me.id,
-  };
-
-  req.context.models.messages[id] = message;
-
-  return res.send(message);
+  const url = req.body.url.join(' ');
+  const path = 'python d:/HK2N4/LapTrinhMangNC/crawl/crawlerNews.py ';
+  console.log(url);
+  cmd.run(path + url, function (err, data, stderr) {
+    if (err) return res.send(err);
+    data = data.split(/[\n+\r+]/g).filter((n) => n);
+    const result = JSON.stringify({ result: data });
+    return res.send(result);
+  });
 });
 
 router.delete('/:messageId', (req, res) => {

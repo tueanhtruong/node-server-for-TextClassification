@@ -4,9 +4,14 @@ import express from 'express';
 
 import models from './models';
 import routes from './routes';
+const bodyParser = require('body-parser');
 
 const app = express();
-
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  }),
+);
 // * Application-Level Middleware * //
 
 // Third-Party Middleware
