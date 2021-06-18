@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import cors from 'cors';
 import express from 'express';
 
@@ -6,6 +6,7 @@ import models from './models';
 import routes from './routes';
 const bodyParser = require('body-parser');
 
+dotenv.config();
 const app = express();
 app.use(
   bodyParser.urlencoded({

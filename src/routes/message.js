@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { Router } from 'express';
 var cmd = require('node-cmd');
 
@@ -14,10 +13,9 @@ router.get('/:messageId', (req, res) => {
 
 router.post('/', (req, res) => {
   const url = req.body.url.join(' ');
-  const path = 'python d:/HK2N4/LapTrinhMangNC/crawl/crawlerNews.py ';
-  console.log(url);
+  const path = process.env.PYTHON_PATH + ' ';
   cmd.run(path + url, function (err, data, stderr) {
-    if (err) return res.send(err);
+    if (err) return res.status(400).json({ error: err });
     data = data.split(/[\n+\r+]/g).filter((n) => n);
     const result = JSON.stringify({ result: data });
     return res.send(result);
@@ -25,10 +23,8 @@ router.post('/', (req, res) => {
 });
 
 router.delete('/:messageId', (req, res) => {
-  const {
-    [req.params.messageId]: message,
-    ...otherMessages
-  } = req.context.models.messages;
+  const { [req.params.messageId]: message, ...otherMessages } =
+    req.context.models.messages;
 
   req.context.models.messages = otherMessages;
 
